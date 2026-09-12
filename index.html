@@ -1,3 +1,8 @@
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,12 +66,21 @@
         var totalMs = elapsedTime;
         if (running) { totalMs += (Date.now() - startTime); }
 
-        var date = new Date(totalMs);
-        var m = String(date.getUTCMinutes()).padStart(2, "0");
-        var s = String(date.getUTCSeconds()).padStart(2, "0");
-        var ms = String(Math.floor(date.getUTCMilliseconds() / 10)).padStart(2, "0");
+        var isNegative = totalMs < 0;
+        var absMs = Math.abs(totalMs);
+
+        var h = Math.floor(absMs / 3600000);
+        var m = Math.floor((absMs % 3600000) / 60000);
+        var s = Math.floor((absMs % 60000) / 1000);
+        var ms = Math.floor((absMs % 1000) / 10);
         
-        display.innerText = m + ":" + s + "." + ms;
+        var signStr = isNegative ? "-" : "";
+        var hStr = h > 0 ? h + ":" : "";
+        var mStr = String(m).padStart(2, "0");
+        var sStr = String(s).padStart(2, "0");
+        var msStr = String(ms).padStart(2, "0");
+        
+        display.innerText = signStr + hStr + mStr + ":" + sStr + "." + msStr;
     }
 
     function startTimer() {
