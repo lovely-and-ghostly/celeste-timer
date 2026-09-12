@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Split Timer</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; color: #333; text-align: center; margin-top: 40px; }
+        .container { background-color: white; max-width: 400px; margin: 0 auto; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        #display { font-size: 4em; font-weight: bold; margin: 20px 0; font-family: monospace; }
+        button { padding: 10px 15px; margin: 5px; font-size: 1em; font-weight: bold; color: white; background-color: #007BFF; border: none; border-radius: 5px; cursor: pointer; transition: background 0.2s; }
+        button:hover { background-color: #0056b3; }
+        .time-adjust { background-color: #28a745; }
+        .time-adjust:hover { background-color: #1e7e34; }
+        .danger { background-color: #dc3545; }
+        .danger:hover { background-color: #c82333; }
+        .splits-container { margin-top: 30px; text-align: left; }
+        .split { margin: 8px 0; padding: 10px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
+        .split input { border: 1px solid #ccc; border-radius: 3px; padding: 5px; width: 120px; }
+        .split-time { font-family: monospace; font-size: 1.1em; color: #555; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>My Split Timer</h2>
+    <div id="display">00:00.00</div>
+    <div>
+        <button onclick="startTimer()">Start</button>
+        <button onclick="stopTimer()">Stop</button>
+        <button onclick="resetTimer()" class="danger">Reset</button>
+    </div>
+    <div style="margin-top: 15px;">
+        <button onclick="addMinute()" class="time-adjust">+1 Min</button>
+        <button onclick="subtractMinute()" class="time-adjust">-1 Min</button>
+        <button onclick="recordSplit()">Record Split</button>
+    </div>
+    <div class="splits-container" id="splits"></div>
+</div>
+
+<script>
+    var startTime = 0;
+    var elapsedTime = 0;
+    var timerInterval = null;
+    var running = false;
+    var splitIndex = 0;
+    var splitNames = ["Warm up", "Phase 1", "Phase 2", "Phase 3", "Phase 4", "Phase 5", "Phase 6", "Cool down"];
+
+    function initSplits() {
+        var container = document.getElementById("splits");
+        container.innerHTML = "";
+        for(var i = 0; i < 8; i++) {
+            container.innerHTML += '<div class="split"><span>' + (i + 1) + '. <input type="text" value="' + splitNames[i] + '"></span><span class="split-time" id="split-' + i + '">--:--.--</span></div>';
+        }
+    }
+    
+    initSplits();
+
+    function updateDisplay() {
+        var display = document.getElementById("display");
+        var totalMs = elapsedTime;
+        if (running) { totalMs += (Date.now() - startTime); }
+        if (totalMs < 0) totalMs = 0;
+
+        var date = new Date(totalMs);
+        var m = String(date.getUTCMinutes()).padStart(2, "0");
+        var s = String(date.getUTCSeconds()).padStart(2, "0");
+        var ms = String(Math.floor(date.getUTCMilliseconds() / 10)).padStart(2, "0");
+        
+        display.innerText = m + ":" + s + "." + ms;
+    }
+
+    function startTimer() {
+        if (!running) {
+            startTime = Date.now();
+            timerInterval = setInterval(updateDisplay, 10);
+            running = true;
+        }
+    }
+
+    function stopTimer() {
+        if (running) {
+            elapsedTime += Date.now() - startTime;
+            clearInterval(timerInterval);
+            running = false;
+            updateDisplay();
+        }
+    }
+
+    function resetTimer() {
+        stopTimer();
+        elapsedTime = 0;
+        splitIndex = 0;
+        updateDisplay();
+        initSplits(); 
+    }
+
+    function addMinute() {
+        if (running) {
+            startTime -= 60000; 
+        } else {
+            elapsedTime += 60000;
+        }
+        updateDisplay();
+    }
+
+    function subtractMinute() {
+        if (running) {
+            startTime += 60000;
+            if (elapsedTime + (Date.now() - startTime) < 0) {
+                startTime = Date.now() + elapsedTime;
+            }
+        } else {
+            elapsedTime -= 60000;
+            if (elapsedTime < 0) elapsedTime = 0;
+        }
+        updateDisplay();
+    }
+
+    function recordSplit() {
+        if (splitIndex < 8) {
+            var currentTime = document.getElementById("display").innerText;
+            document.getElementById("split-" + splitIndex).innerText = currentTime;
+            document.getElementById("split-" + splitIndex).style.color = "#007BFF";
+            document.getElementById("split-" + splitIndex).style.fontWeight = "bold";
+            splitIndex++;
+        } else {
+            alert("All 8 splits have been recorded! Reset the timer to start over.");
+        }
+    }
+</script>
+
+</body>
+</html>
