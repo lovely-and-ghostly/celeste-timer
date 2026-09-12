@@ -106,9 +106,6 @@
     function subtractMinute() {
         if (running) {
             startTime += 60000;
-            if (elapsedTime + (Date.now() - startTime) < 0) {
-                startTime = Date.now() + elapsedTime;
-            }
         } else {
             elapsedTime -= 60000;
         }
