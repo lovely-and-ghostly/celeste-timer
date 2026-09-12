@@ -60,7 +60,6 @@
         var display = document.getElementById("display");
         var totalMs = elapsedTime;
         if (running) { totalMs += (Date.now() - startTime); }
-        if (totalMs < 0) totalMs = 0;
 
         var date = new Date(totalMs);
         var m = String(date.getUTCMinutes()).padStart(2, "0");
