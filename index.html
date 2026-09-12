@@ -23,7 +23,7 @@
 <body>
 
 <div class="container">
-    <h2>My Split Timer</h2>
+    <h2>Celeste Timer</h2>
     <div id="display">00:00.00</div>
     <div>
         <button onclick="startTimer()">Start</button>
@@ -31,8 +31,8 @@
         <button onclick="resetTimer()" class="danger">Reset</button>
     </div>
     <div style="margin-top: 15px;">
-        <button onclick="addMinute()" class="time-adjust">+1 Min</button>
-        <button onclick="subtractMinute()" class="time-adjust">-1 Min</button>
+        <button onclick="addMinute()" class="time-adjust">Strawberry 🍓</button>
+        <button onclick="subtractMinute()" class="time-adjust">You</button>
         <button onclick="recordSplit()">Record Split</button>
     </div>
     <div class="splits-container" id="splits"></div>
@@ -44,7 +44,7 @@
     var timerInterval = null;
     var running = false;
     var splitIndex = 0;
-    var splitNames = ["Warm up", "Phase 1", "Phase 2", "Phase 3", "Phase 4", "Phase 5", "Phase 6", "Cool down"];
+    var splitNames = ["Prologue", "Forsaken City", "Old Site", "Celestial Resort", "Golden Ridge", "Mirror Temple", "Reflection", "The Summit"];
 
     function initSplits() {
         var container = document.getElementById("splits");
